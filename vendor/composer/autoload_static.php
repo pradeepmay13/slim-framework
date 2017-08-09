@@ -8,11 +8,13 @@ class ComposerStaticInit430d7d54599ebcae0b0f33641ed2229e
 {
     public static $files = array (
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'Slim\\Csrf\\' => 10,
             'Slim\\' => 5,
         ),
         'P' => 
@@ -31,6 +33,10 @@ class ComposerStaticInit430d7d54599ebcae0b0f33641ed2229e
     );
 
     public static $prefixDirsPsr4 = array (
+        'Slim\\Csrf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/csrf/src',
+        ),
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
