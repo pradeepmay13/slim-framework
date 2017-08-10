@@ -56,6 +56,121 @@ class crud {
         $result->execute();
         return $result;
     }
-}
+    public function login($data){
+        $data="";
+        $data = json_decode(file_get_contents('php://input'));
+        if (isset($data->username) && isset($data->password)) {
+            $username = $data->username;
+            $password = sha1($data->password);
+            $userInfo = $db->query("SELECT email FROM users WHERE email='$username' AND password='$password'");
+            $userInfo = $userInfo->fetchAll();
+            $token;
+            if (count($userInfo) == 1) {
+                $token = $username . " | " . uniqid() . uniqid() . uniqid();
 
+                $tokenStore = "UPDATE users SET token=:token WHERE email=:email AND password=:password";
+                $query = $db->prepare($tokenStore);
+                $execute = $query->execute(array(
+                    ":token" => $token,
+                    ":email" => $username,
+                    ":password" => $password
+                ));
+                echo json_encode($token);
+            } else {
+                $res = array(
+                    "error_message" => "Username or Password is wrong",
+                    "email" => $username,
+                    "error" => "ERROR"
+                );
+                return json_encode($res);
+            }
+        } else {
+            $res = array(
+                "error_message" => "Please Fill All Details",
+                "email" => '',
+                "error" => "ERROR"
+            );
+            return json_encode($res);
+        }
+    }
+}
+class authuser extends crud
+{
+    public function login($data)
+    {
+        try
+        {
+            $username=stripslashes($data['username']);
+            $password=stripslashes($data['password']);
+            if(isset($username) && isset($password) && !empty($username) && !empty($password))
+            {
+                $login_stmt=$this->db_new->prepare("SELECT * FROM users WHERE username=:username AND password=:password");
+                $login_stmt->bindParam(":username",$username);
+                $login_stmt->bindParam(":password",$password);
+                $login_stmt->execute();     
+                if($login_stmt->rowCount()>0)
+                {
+                    $row=$login_stmt->fetch(PDO::FETCH_ASSOC);
+                    if($row['status']=='1')
+                    {
+                        $_SESSION['id']=session_id();
+                        $_SESSION['user_id']=$row['user_id'];
+                        $token = $username . " | " . uniqid() . uniqid() . uniqid();
+                        $tokenStore = "UPDATE users SET token=:token WHERE username=:username AND password=:password";
+                        $query = $this->db_new->prepare($tokenStore);
+                        $execute = $query->execute(array(
+                            ":token" => $token,
+                            ":username" => $username,
+                            ":password" => $password,
+                        ));
+                        $res = array(
+                            "message" => "Success",
+                            "username" => $username,
+                            "execution" => "1",
+                            "token" => $token
+                        );
+                        return json_encode($res);
+                    }
+                    else
+                    {
+                        $res = array(
+                            "message" => "Username or Password is wrong",
+                            "username" => $username,
+                            "execution" => "0"
+                        );
+                        return json_encode($res);
+                    }
+                }
+                else
+                {
+                    $res = array(
+                        "message" => "Username or Password is wrong",
+                        "username" => $username,
+                        "execution" => "0"
+                    );
+                    return json_encode($res);
+                }
+            }
+            else
+            {
+                $res = array(
+                    "message" => "Username or Password is missing",
+                    "username" => $username,
+                    "execution" => "0"
+                );
+                return json_encode($res);
+            }
+        }
+        catch(PDOException $e)
+        {
+            $e->getMessage();
+            $res = array(
+                "message" => $e->getMessage(),
+                "username" => $username,
+                "execution" => "0"
+            );
+            return json_encode($res);
+        }
+    }   
+}
 ?>

@@ -1,4 +1,7 @@
 <?php session_start();
+header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Headers: X-Requested-With');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -11,7 +14,7 @@ $container['upload_directory'] = __DIR__ . '/uploads';
 $container['csrf'] = function ($c) {
     return new \Slim\Csrf\Guard;
 };
-$app->add($container->get('csrf'));
+//$app->add($container->get('csrf'));
 
 $app->post('/uploadfile', function(Request $request, Response $response) {
     $directory = $this->get('upload_directory');
@@ -125,6 +128,7 @@ $app->get('/books/{book_id}', function(Request $request, Response $response) {
     }
 });
 
+
 //======================== Creating a Books Record ===========================================
 
 $app->post('/books/add', function(Request $request, Response $response) {
@@ -188,6 +192,31 @@ $app->delete('/books/{book_id}', function(Request $request, Response $response){
     }else{
         $dataset= array('execution'=>false, 'data'=>$result);
         return $response->withStatus(503)
+        ->withHeader('Content-Type', 'application/json')
+        ->write(json_encode($dataset));
+    }
+});
+
+
+//======================== Login ===========================================
+$app->post('/login', function(Request $request, Response $response, $args) {     
+    $db=new db();
+    $auth=new authuser($db->connect());    
+    //$formData = json_decode(file_get_contents('php://input'), true);
+    $reqData=json_decode($request->getBody(),true);
+    $data['username'] = $reqData['username'];
+    $data['password'] = $reqData['password'];
+    $result=json_decode($auth->login($data),true);    
+    if($result['execution']=="1"){
+        $dataset=$result; 
+        //$status = $response->getStatusCode();
+        return $response->withStatus(200)
+        ->withHeader('Content-Type', 'application/json')
+        ->write(json_encode($dataset));
+    }
+    else{
+        $dataset= array('error'=>true, 'data'=>$result);
+        return $response->withStatus(200)
         ->withHeader('Content-Type', 'application/json')
         ->write(json_encode($dataset));
     }
