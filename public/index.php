@@ -1,4 +1,8 @@
 <?php session_start();
+//$a = '1';$ax="1";
+//$b = &$a;$bx = &$ax;
+//$b = "2$b";$bx = "2$bx";
+//echo $ax.", ".$bx;
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Headers: X-Requested-With');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -219,6 +223,27 @@ $app->post('/login', function(Request $request, Response $response, $args) {
         return $response->withStatus(200)
         ->withHeader('Content-Type', 'application/json')
         ->write(json_encode($dataset));
+    }
+});
+//======================== Logout ===========================================
+$app->post('/logout', function(Request $request, Response $response, $args) {     
+    $db=new db();
+    $auth=new authuser($db->connect());    
+    $reqData=$request->getBody();
+    if(isset($reqData)){
+        $token=json_decode($reqData,true);
+        $result=$auth->logout($token);    
+        if ($result){
+            $dataset=array("execution"=>true);
+            return $response->withStatus($response->getStatusCode())
+            ->withHeader('Content-Type', 'application/json')
+            ->write(json_encode($dataset));
+        }else{
+            $dataset= array('execution'=>false, 'data'=>$result);
+            return $response->withStatus(201)
+            ->withHeader('Content-Type', 'application/json')
+            ->write(json_encode($dataset));
+        }
     }
 });
 

@@ -56,43 +56,6 @@ class crud {
         $result->execute();
         return $result;
     }
-    public function login($data){
-        $data="";
-        $data = json_decode(file_get_contents('php://input'));
-        if (isset($data->username) && isset($data->password)) {
-            $username = $data->username;
-            $password = sha1($data->password);
-            $userInfo = $db->query("SELECT email FROM users WHERE email='$username' AND password='$password'");
-            $userInfo = $userInfo->fetchAll();
-            $token;
-            if (count($userInfo) == 1) {
-                $token = $username . " | " . uniqid() . uniqid() . uniqid();
-
-                $tokenStore = "UPDATE users SET token=:token WHERE email=:email AND password=:password";
-                $query = $db->prepare($tokenStore);
-                $execute = $query->execute(array(
-                    ":token" => $token,
-                    ":email" => $username,
-                    ":password" => $password
-                ));
-                echo json_encode($token);
-            } else {
-                $res = array(
-                    "error_message" => "Username or Password is wrong",
-                    "email" => $username,
-                    "error" => "ERROR"
-                );
-                return json_encode($res);
-            }
-        } else {
-            $res = array(
-                "error_message" => "Please Fill All Details",
-                "email" => '',
-                "error" => "ERROR"
-            );
-            return json_encode($res);
-        }
-    }
 }
 class authuser extends crud
 {
@@ -171,6 +134,21 @@ class authuser extends crud
             );
             return json_encode($res);
         }
-    }   
+    }
+    public function logout($data){
+        try
+        {
+            $token=stripslashes($data);
+            $queryString="UPDATE users SET token='logged out' WHERE token=:token";
+            $stmt = $this->db_new->prepare($queryString);
+            $stmt->execute(array(":token" => $token));
+            return $stmt;
+        }
+        catch(PDOException $e)
+        {
+            $e->getMessage();
+            return json_encode($res);
+        }
+    }
 }
 ?>
