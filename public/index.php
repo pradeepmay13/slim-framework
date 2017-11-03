@@ -252,19 +252,17 @@ $app->post('/logout', function(Request $request, Response $response, $args) {
 $app->post('/user', function(Request $request, Response $response, $args) {     
     $db=new db();
     $auth=new authuser($db->connect());
-	$token=$request->getBody();
-    if(isset($token)){        
-        $result=$auth->getUser($token);
+    $reqData=json_decode($request->getBody(),true);
+    if(isset($reqData)){        
+        $result=$auth->getUser($reqData);
         if ($result){
-            $dataset=array("execution"=>true, "resultSet"=>$result);
             return $response->withStatus($response->getStatusCode())
             ->withHeader('Content-Type', 'application/json')
-            ->write(json_encode($dataset));
+            ->write(json_encode($result));
         }else{
-            $dataset= array('execution'=>false, 'resultSet'=>$result);
             return $response->withStatus($response->getStatusCode())
             ->withHeader('Content-Type', 'application/json')
-            ->write(json_encode($dataset));
+            ->write(json_encode($result));
         }
     }
 });

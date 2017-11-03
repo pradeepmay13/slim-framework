@@ -150,12 +150,33 @@ class authuser extends crud
             return json_encode($res);
         }
     }
-	public function getUser($token) {
-		$query="SELECT user_id, username, email_id, name FROM users WHERE status='1' AND token=:token ORDER BY user_id DESC";
-        $select_stmt = $this->db_new->prepare($query);
-        $select_stmt->execute(array(":token" => $token));
-        $dataList = $select_stmt->fetchALL(PDO::FETCH_ASSOC);
-        return $dataList;
+    public function getUser($token) {    
+        $dataList="";
+        try
+        {
+            $query="SELECT user_id, username, email_id, name FROM users WHERE status='1' AND token=:token ORDER BY user_id DESC";
+            $select_stmt = $this->db_new->prepare($query);
+            $select_stmt->execute(array(":token" => $token));
+            $dataList = $select_stmt->fetchALL(PDO::FETCH_ASSOC);
+            $res = array(
+                "message" => "Success",
+                "resultSet" => $dataList,
+                "execution" => true,
+                "token" => $token
+            );
+            return $res;
+        }
+        catch(PDOException $e)
+        {
+            $e->getMessage();
+            $res = array(
+                "message" => $e->getMessage(),
+                "resultSet" => $dataList,
+                "execution" => false,
+                "token" => $token
+            );
+            return json_encode($res);
+        }
     }
 }
 ?>
