@@ -209,7 +209,7 @@ $app->post('/login', function(Request $request, Response $response, $args) {
     //$formData = json_decode(file_get_contents('php://input'), true);
     $reqData=json_decode($request->getBody(),true);
     $data['username'] = $reqData['username'];
-    $data['password'] = $reqData['password'];
+    $data['password'] = $reqData['userpassword'];
     $result=json_decode($auth->login($data),true);    
     if($result['execution']=="1"){
         $dataset=$result; 
