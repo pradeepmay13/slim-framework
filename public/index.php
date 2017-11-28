@@ -266,6 +266,15 @@ $app->post('/user', function(Request $request, Response $response, $args) {
         }
     }
 });
+$app->post('/uploadForm', function(Request $request, Response $response, $args) {     
+    $db=new db();
+    $auth=new authuser($db->connect());
+    $reqData=json_decode($request->getBody(),true);
+    $directory = $this->get('upload_directory');
+    $uploadedFiles = $request->getUploadedFiles();
+    print_r($reqData);
+    print_r($uploadedFiles);
+});
 
 $app->run();
 ?>
