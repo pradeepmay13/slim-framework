@@ -5,7 +5,7 @@
 //echo $ax.", ".$bx;
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Headers: X-Requested-With');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, FILES, PUT, DELETE');
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -269,11 +269,46 @@ $app->post('/user', function(Request $request, Response $response, $args) {
 $app->post('/uploadForm', function(Request $request, Response $response, $args) {     
     $db=new db();
     $auth=new authuser($db->connect());
-    $reqData=json_decode($request->getBody(),true);
+    $reqData=($request->getParsedBody());
+    //print_r($reqData);
+    //print_r($files[0]['fileInput']);
     $directory = $this->get('upload_directory');
     $uploadedFiles = $request->getUploadedFiles();
     print_r($reqData);
+    print_r($uploadedFiles['fileInput']);
+    // handle single input with single file upload
+    if(isset($uploadedFiles['example1'])){
+        $uploadedFile = $uploadedFiles['example1'];
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = moveUploadedFile($directory, $uploadedFile);
+            $response->write('uploaded ' . $filename['newFileName'] . '<br/>');
+        }
+    } 
+
+});
+$app->post('/uploadFormPNG', function(Request $request, Response $response, $args) {  
+    //$data=file_put_contents($payload['avatar']['filename'], base64_decode($payload['avatar']['value']));
+    $db=new db();
+    $auth=new authuser($db->connect());
+    $reqData=($request->getParsedBody());
+    //print_r($reqData);
+    //print_r($files[0]['fileInput']);
+    $directory = $this->get('upload_directory');
+    $uploadedFiles = $request->getUploadedFiles();
+    $rawData = file_get_contents("php://input");
+    //$data=file_put_contents($rawData['avatar']['filename'], base64_decode($rawData['avatar']['value']));
+    print_r($rawData);
+    //print_r($data);
     print_r($uploadedFiles);
+    // handle single input with single file upload
+    if(isset($uploadedFiles['example1'])){
+        $uploadedFile = $uploadedFiles['example1'];
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = moveUploadedFile($directory, $uploadedFile);
+            $response->write('uploaded ' . $filename['newFileName'] . '<br/>');
+        }
+    } 
+
 });
 
 $app->run();
