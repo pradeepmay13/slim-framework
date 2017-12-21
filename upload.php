@@ -5,8 +5,8 @@ $password = "";
 $dbname = "slim_db";
 header("Access-Control-Allow-Origin: *");
 //print_r($_FILES);
-print_r(json_decode($_REQUEST['modelData'],true));
-die;
+$modelData=json_decode($_REQUEST['modelData'],true);
+//die;
 $path = 'uploads/';
 if (isset($_FILES['file'])) {
   $originalName = $_FILES['file']['name'];
@@ -27,8 +27,8 @@ if (isset($_FILES['file'])) {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "INSERT INTO upload_files (userId, fileOrigName, fileNewName, fileType, created_date)
-        VALUES ('1', '".$originalName."', '".$generatedName."', '".$ext."', now())";
+        $sql = "INSERT INTO upload_files (userId, fileOrigName, fileNewName, fileType, comment, created_date)
+        VALUES ('1', '".$originalName."', '".$generatedName."', '".$ext."', '".$modelData['name']."', now())";
         $conn->exec($sql);
         if($conn)
         {

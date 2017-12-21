@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2017 at 11:24 AM
+-- Generation Time: Dec 21, 2017 at 12:12 PM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -92,6 +92,7 @@ CREATE TABLE `upload_files` (
   `fileOrigName` varchar(255) NOT NULL,
   `fileNewName` varchar(255) NOT NULL,
   `fileType` varchar(255) NOT NULL,
+  `comment` varchar(255) NOT NULL,
   `delete_fg` int(2) NOT NULL DEFAULT '0',
   `status_fg` int(2) NOT NULL DEFAULT '1',
   `created_date` datetime NOT NULL
@@ -101,9 +102,12 @@ CREATE TABLE `upload_files` (
 -- Dumping data for table `upload_files`
 --
 
-INSERT INTO `upload_files` (`id`, `userId`, `fileOrigName`, `fileNewName`, `fileType`, `delete_fg`, `status_fg`, `created_date`) VALUES
-(1, 1, '2_20171123 DB Schenker_SAP Application ManagementRfI_Questions_v1.0.xlsx', 'b082f3331daba8e9d2878790995aa57f.xlsx', '.xlsx', 0, 1, '2017-12-21 10:21:33'),
-(2, 1, '2_20171123 DB Schenker_SAP Application ManagementRfI_Questions_v1.0.xlsx', 'd9ce81add207fc5dc7389ce2bc56c6c4.xlsx', '.xlsx', 0, 1, '2017-12-21 10:22:07');
+INSERT INTO `upload_files` (`id`, `userId`, `fileOrigName`, `fileNewName`, `fileType`, `comment`, `delete_fg`, `status_fg`, `created_date`) VALUES
+(1, 1, '2_20171123 DB Schenker_SAP Application ManagementRfI_Questions_v1.0.xlsx', 'b082f3331daba8e9d2878790995aa57f.xlsx', '.xlsx', '', 0, 1, '2017-12-21 10:21:33'),
+(2, 1, '2_20171123 DB Schenker_SAP Application ManagementRfI_Questions_v1.0.xlsx', 'd9ce81add207fc5dc7389ce2bc56c6c4.xlsx', '.xlsx', '', 0, 1, '2017-12-21 10:22:07'),
+(3, 1, 'InterviewEvalSpreadsheet.xlsx', 'd7786136bf1a29d21a879585ff6f92ed.xlsx', '.xlsx', '756765765 765 7657', 0, 1, '2017-12-21 17:35:36'),
+(4, 1, 'InterviewEvalSpreadsheet.xlsx', '3a7074fa2a1000fbeaa265fb4ed2b5df.xlsx', '.xlsx', 'asdaasd', 0, 1, '2017-12-21 17:39:57'),
+(5, 1, 'IMG_20171215_154126.jpg', 'ee59655ae509f3e07a557cae3481ab9f.jpg', '.jpg', 'gfdgfdg', 0, 1, '2017-12-21 17:42:05');
 
 -- --------------------------------------------------------
 
@@ -127,8 +131,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `name`, `email_id`, `profile_pic`, `token`, `status`) VALUES
-(1, 'admin', 'admin', 'Admin', 'admin@gmail.com', NULL, 'admin | 5a38c4563f0715a38c4563f0715a38c4563f071', 1),
-(2, 'pradeep', 'pradeep', 'Pradeep', 'pradeep@gmail.com', NULL, 'logged out', 1);
+(1, 'admin', 'admin', 'Admin', 'admin@gmail.com', NULL, 'logged out', 1),
+(2, 'pradeep', 'pradeep', 'Pradeep', 'pradeep@gmail.com', NULL, 'pradeep | 5a3ba4fc69d785a3ba4fc69d785a3ba4fc69d78', 1);
 
 -- --------------------------------------------------------
 
@@ -208,7 +212,7 @@ ALTER TABLE `updates`
 -- AUTO_INCREMENT for table `upload_files`
 --
 ALTER TABLE `upload_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `users`
 --
