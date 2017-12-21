@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2017 at 12:20 PM
+-- Generation Time: Dec 21, 2017 at 11:24 AM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -83,6 +83,31 @@ CREATE TABLE `updates` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `upload_files`
+--
+
+CREATE TABLE `upload_files` (
+  `id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `fileOrigName` varchar(255) NOT NULL,
+  `fileNewName` varchar(255) NOT NULL,
+  `fileType` varchar(255) NOT NULL,
+  `delete_fg` int(2) NOT NULL DEFAULT '0',
+  `status_fg` int(2) NOT NULL DEFAULT '1',
+  `created_date` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `upload_files`
+--
+
+INSERT INTO `upload_files` (`id`, `userId`, `fileOrigName`, `fileNewName`, `fileType`, `delete_fg`, `status_fg`, `created_date`) VALUES
+(1, 1, '2_20171123 DB Schenker_SAP Application ManagementRfI_Questions_v1.0.xlsx', 'b082f3331daba8e9d2878790995aa57f.xlsx', '.xlsx', 0, 1, '2017-12-21 10:21:33'),
+(2, 1, '2_20171123 DB Schenker_SAP Application ManagementRfI_Questions_v1.0.xlsx', 'd9ce81add207fc5dc7389ce2bc56c6c4.xlsx', '.xlsx', 0, 1, '2017-12-21 10:22:07');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -102,7 +127,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `name`, `email_id`, `profile_pic`, `token`, `status`) VALUES
-(1, 'admin', 'admin', 'Admin', 'admin@gmail.com', NULL, 'admin | 5a005270e22995a005270e22995a005270e2299', 1);
+(1, 'admin', 'admin', 'Admin', 'admin@gmail.com', NULL, 'admin | 5a38c4563f0715a38c4563f0715a38c4563f071', 1),
+(2, 'pradeep', 'pradeep', 'Pradeep', 'pradeep@gmail.com', NULL, 'logged out', 1);
 
 -- --------------------------------------------------------
 
@@ -148,6 +174,12 @@ ALTER TABLE `updates`
   ADD PRIMARY KEY (`update_id`);
 
 --
+-- Indexes for table `upload_files`
+--
+ALTER TABLE `upload_files`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -173,10 +205,15 @@ ALTER TABLE `library`
 ALTER TABLE `updates`
   MODIFY `update_id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `upload_files`
+--
+ALTER TABLE `upload_files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
